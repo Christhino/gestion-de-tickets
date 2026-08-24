@@ -1,3 +1,6 @@
+/**
+ * Controllers
+ */
 import { Request, Response, NextFunction } from "express";
 import { ticketService } from "../services/ticketService";
 

@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { ticketRoutes } from "./routes/ticketRoutes";
+import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 
 export function createApp() {
   const app = express();
@@ -11,6 +12,9 @@ export function createApp() {
   app.get("/health", (_req, res) => res.status(200).json({ status: "ok" }));
 
   app.use("/api", ticketRoutes);
+
+  app.use(notFoundHandler);
+  app.use(errorHandler);
 
 
   return app;
