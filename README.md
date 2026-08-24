@@ -1,4 +1,7 @@
 # Gestion des tickets — Exercice technique Full-Stack TypeScript
+## Aperçu
+
+![Aperçu](./assets/screenshots/screen-shot.png)
 
 Application de gestion de tickets présentée sous forme de Kanban à 4 colonnes
 (**All tickets / Pending / Open / Closed**), avec un frontend React +
