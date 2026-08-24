@@ -7,6 +7,7 @@ import { TicketCard } from "../TicketCard/TicketCard";
 import { CreateTicketModal } from "../TicketForm/CreateTicketModal";
 import { TicketDetails } from "../TicketDetails/TicketDetails";
 import { ConfirmReopenDialog } from "../ConfirmDialog/ConfirmReopenDialog";
+import { BoardSkeleton } from "./BoardSkeleton";
 
 export function TicketBoard() {
   const {
@@ -84,11 +85,7 @@ export function TicketBoard() {
       </header>
 
       <main className="mx-auto max-w-7xl px-6 py-6">
-        {loading && (
-          <div className="flex items-center justify-center rounded-xl border border-slate-200 bg-white py-20 text-sm text-slate-500">
-            Loading tickets...
-          </div>
-        )}
+        {loading && <BoardSkeleton />}
 
         {!loading && loadError && (
           <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-red-100 bg-red-50 py-16 text-center">

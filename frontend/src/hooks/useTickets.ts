@@ -12,12 +12,16 @@ export function useTickets() {
 
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [updateError, setUpdateError] = useState<string | null>(null);
-
+  
+  const MIN_LOADING_TIME = 1200;
   const loadTickets = useCallback(async () => {
     setLoading(true);
     setLoadError(null);
     try {
-      const data = await ticketService.list();
+      const [data] = await Promise.all([
+        ticketService.list(),
+        new Promise((resolve) => setTimeout(resolve, MIN_LOADING_TIME)),
+      ]);
       setTickets(data);
     } catch (err) {
       setLoadError(err instanceof Error ? err.message : "Unable to load tickets.");
@@ -31,7 +35,7 @@ export function useTickets() {
       loadTickets();
     });
   }, [loadTickets]);
-  
+
   const createTicket = useCallback(async (title: string) => {
     setCreating(true);
     setCreateError(null);
