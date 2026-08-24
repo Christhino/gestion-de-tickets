@@ -19,12 +19,23 @@ export const ticketController = {
     }
   },
 
+  
   updateStatus(req: Request, res: Response, next: NextFunction) {
     try {
-      const ticket = ticketService.updateStatus(req.params.id, req.body?.status);
-      res.status(200).json(ticket);
+      const { id } = req.params;
+      const { status } = req.body ?? {};
+
+      if (typeof id !== "string") {
+        return res.status(400).json({ error: "invalid ticket id" });
+      }
+      if (typeof status !== "string") {
+        return res.status(400).json({ error: "status is required" });
+      }
+
+      const ticket = ticketService.updateStatus(id, status);
+      return res.status(200).json(ticket);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   },
 };
