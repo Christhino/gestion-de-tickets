@@ -65,7 +65,7 @@ export function TicketBoard() {
             <TicketIcon className="h-4 w-4" />
           </div>
           <div>
-            <h1 className="text-base font-semibold text-slate-900">Ticket Board</h1>
+            <h1 className="text-base font-semibold text-slate-900">Gestion des tickets</h1>
             <p className="text-xs text-slate-400">
               {loading ? "Loading…" : `${tickets.length} ticket${tickets.length === 1 ? "" : "s"} total`}
             </p>
