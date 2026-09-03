@@ -1,6 +1,7 @@
 // src/hooks/useTickets.test.ts
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { renderHook, waitFor } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
+import { renderHook } from "../test/test-utils";
 import { useTickets } from "./useTickets";
 import { ticketService } from "../services/ticketService";
 import { ticketList } from "../test/mocks/fixtures";

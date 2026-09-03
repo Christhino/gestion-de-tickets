@@ -180,3 +180,31 @@ Utilisation :
 - Mise à jour des imports cassés dans TicketDetails.tsx suite à cette extraction
 - Aide à la rédaction de cette documentation.
 
+## Gestion des données côté frontend — TanStack Query
+
+Le hook `useTickets` s'appuie sur **TanStack Query** plutôt que sur un
+`useState`/`useEffect` fait maison, pour les raisons suivantes :
+
+- **Cache et fraîcheur des données** : les tickets sont mis en cache par clé
+  de requête (`["tickets"]`), avec une `staleTime` configurable. Un `refetch`
+  manuel ou automatique (au retour sur l'onglet, à la reconnexion réseau)
+  reste possible sans code supplémentaire.
+- **États dérivés automatiquement** : `isLoading`, `isPending`, `error` sont
+  fournis nativement par la librairie, éliminant le besoin de `useState`
+  manuels pour chaque flag (`loading`, `creating`, `updatingId`, etc.).
+- **Mutations avec mise à jour optimiste du cache** : `useMutation` gère le
+  cycle de vie complet d'une écriture (création, changement de statut) et
+  permet de mettre à jour le cache directement via `setQueryData`, sans
+  refetch complet de la liste après chaque action.
+- **Moins de code, moins de bugs potentiels** : la logique de
+  loading/error/retry qui était écrite à la main (et dupliquée entre
+  `createTicket` et `updateStatus`) est désormais gérée par une librairie
+  testée et largement utilisée en production.
+- **Proche de RTK Query** : les concepts (queries, mutations, cache,
+  invalidation) sont directement transposables à RTK Query, ce qui facilite
+  la transition si le projet migre vers cette stack.
+
+Un délai artificiel de 1200ms avait été temporairement ajouté pendant le
+développement pour visualiser l'état de chargement (skeleton) ; il a été
+retiré une fois cette validation faite, car il n'apportait aucune valeur en
+dehors du développement local.

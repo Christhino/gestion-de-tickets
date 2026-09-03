@@ -1,77 +1,71 @@
-import { useCallback, useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ticketService } from "../services/ticketService";
 import type { Ticket, TicketStatus } from "../types/ticket";
+import { ticketKeys } from "./queryKeys";
 
 export function useTickets() {
-  const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
-  const [creating, setCreating] = useState(false);
-  const [createError, setCreateError] = useState<string | null>(null);
-  const [updatingId, setUpdatingId] = useState<string | null>(null);
-  const [updateError, setUpdateError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const loadTickets = useCallback(async () => {
-    setLoading(true);
-    setLoadError(null);
+  const {
+    data: tickets = [],
+    isLoading: loading,
+    error: loadErrorRaw,
+    refetch,
+  } = useQuery({
+    queryKey: ticketKeys.all,
+    queryFn: ticketService.list,
+  });
+
+  const loadError = loadErrorRaw instanceof Error ? loadErrorRaw.message : null;
+
+  const createMutation = useMutation({
+    mutationFn: (title: string) => ticketService.create({ title }),
+    onSuccess: (newTicket) => {
+      queryClient.setQueryData<Ticket[]>(ticketKeys.all, (prev = []) => [newTicket, ...prev]);
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: TicketStatus }) =>
+      ticketService.updateStatus(id, status),
+    onSuccess: (updated) => {
+      queryClient.setQueryData<Ticket[]>(ticketKeys.all, (prev = []) =>
+        prev.map((t) => (t.id === updated.id ? updated : t))
+      );
+    },
+  });
+
+  const createTicket = async (title: string): Promise<boolean> => {
     try {
-      const data = await ticketService.list();
-      setTickets(data);
-    } catch (err) {
-      setLoadError(err instanceof Error ? err.message : "Unable to load tickets.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    queueMicrotask(() => {
-      loadTickets();
-    });
-  }, [loadTickets]);
-
-  const createTicket = useCallback(async (title: string) => {
-    setCreating(true);
-    setCreateError(null);
-    try {
-      const ticket = await ticketService.create({ title });
-      setTickets((prev) => [ticket, ...prev]);
+      await createMutation.mutateAsync(title);
       return true;
-    } catch (err) {
-      setCreateError(err instanceof Error ? err.message : "Unable to create the ticket. Please try again.");
+    } catch {
       return false;
-    } finally {
-      setCreating(false);
     }
-  }, []);
+  };
 
-  const updateStatus = useCallback(async (id: string, status: TicketStatus) => {
-    setUpdatingId(id);
-    setUpdateError(null);
+  const updateStatus = async (id: string, status: TicketStatus): Promise<Ticket | null> => {
     try {
-      const updated = await ticketService.updateStatus(id, status);
-      setTickets((prev) => prev.map((t) => (t.id === id ? updated : t)));
-      return updated;
-    } catch (err) {
-      setUpdateError(err instanceof Error ? err.message : "Unable to update the ticket. Please try again.");
+      return await updateMutation.mutateAsync({ id, status });
+    } catch {
       return null;
-    } finally {
-      setUpdatingId(null);
     }
-  }, []);
+  };
 
   return {
     tickets,
     loading,
     loadError,
-    reload: loadTickets,
-    creating,
-    createError,
+    reload: refetch,
+
+    creating: createMutation.isPending,
+    createError: createMutation.error instanceof Error ? createMutation.error.message : null,
     createTicket,
-    clearCreateError: () => setCreateError(null),
-    updatingId,
-    updateError,
+    clearCreateError: () => createMutation.reset(),
+
+    updatingId: updateMutation.variables?.id ?? null,
+    updateError: updateMutation.error instanceof Error ? updateMutation.error.message : null,
     updateStatus,
-    clearUpdateError: () => setUpdateError(null),
+    clearUpdateError: () => updateMutation.reset(),
   };
 }
