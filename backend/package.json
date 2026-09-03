@@ -6,6 +6,8 @@
     "scripts": {
         "dev": "tsx watch src/server.ts",
         "test": "jest",
+        "build": "tsc -p tsconfig.json --outDir dist",
+        "start": "node dist/server.js",
         "typecheck": "tsc --noEmit"
     },
     "keywords": [],
