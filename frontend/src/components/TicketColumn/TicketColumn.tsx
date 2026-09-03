@@ -1,4 +1,4 @@
-import type  { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 interface TicketColumnProps {
   title: string;
@@ -20,10 +20,11 @@ export function TicketColumn({
   headerAction,
 }: TicketColumnProps) {
   const hasCards = Boolean(children) && count > 0;
+  const testId = `column-${title.toLowerCase().replace(/\s+/g, "-")}`;
 
   return (
-    <div className="flex min-w-0 flex-1 flex-col">
-      <div className="mb-3 flex items-center gap-2">
+    <div data-testid={testId} className="flex flex-col flex-1 min-w-0">
+      <div className="flex items-center gap-2 mb-3">
         <span className={"flex h-6 w-6 items-center justify-center rounded-md " + accentClassName}>{icon}</span>
         <h2 className="text-sm font-semibold text-slate-700">{title}</h2>
         <span className="ml-auto rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-500">
@@ -35,7 +36,7 @@ export function TicketColumn({
         {hasCards ? (
           children
         ) : (
-          <div className="flex flex-1 items-center justify-center py-10 text-center text-sm text-slate-400">
+          <div className="flex items-center justify-center flex-1 py-10 text-sm text-center text-slate-400">
             {emptyLabel}
           </div>
         )}

@@ -38,12 +38,12 @@ export function CreateTicketModal({ onClose, onCreate, creating, error, onClearE
   const displayedError = localError ?? error;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
-      <div className="w-full max-w-sm rounded-xl bg-white shadow-xl ring-1 ring-slate-200">
-        <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+      <div className="w-full max-w-sm bg-white shadow-xl rounded-xl ring-1 ring-slate-200">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
           <h3 className="text-sm font-semibold text-slate-800">Create ticket</h3>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600" aria-label="Close">
-            <X className="h-4 w-4" />
+            <X className="w-4 h-4" />
           </button>
         </div>
         <form onSubmit={submit} className="px-5 py-4">
@@ -60,7 +60,7 @@ export function CreateTicketModal({ onClose, onCreate, creating, error, onClearE
               if (error) onClearError();
             }}
             placeholder="e.g. Fix authentication"
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full px-3 py-2 text-sm border rounded-lg border-slate-300 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             disabled={creating}
           />
           {displayedError && (
@@ -68,7 +68,7 @@ export function CreateTicketModal({ onClose, onCreate, creating, error, onClearE
               <AlertTriangle className="h-3.5 w-3.5" /> {displayedError}
             </p>
           )}
-          <div className="mt-5 flex justify-end gap-2">
+          <div className="flex justify-end gap-2 mt-5">
             <button
               type="button"
               onClick={onClose}
@@ -80,6 +80,7 @@ export function CreateTicketModal({ onClose, onCreate, creating, error, onClearE
             <button
               type="submit"
               disabled={creating}
+              data-testid="submit-create-ticket"
               className="rounded-lg bg-indigo-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed min-w-[110px] text-center"
             >
               {creating ? "Creating…" : "Create ticket"}
