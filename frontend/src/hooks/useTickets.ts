@@ -6,22 +6,16 @@ export function useTickets() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
-
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [updateError, setUpdateError] = useState<string | null>(null);
-  
-  const MIN_LOADING_TIME = 1200;
+
   const loadTickets = useCallback(async () => {
     setLoading(true);
     setLoadError(null);
     try {
-      const [data] = await Promise.all([
-        ticketService.list(),
-        new Promise((resolve) => setTimeout(resolve, MIN_LOADING_TIME)),
-      ]);
+      const data = await ticketService.list();
       setTickets(data);
     } catch (err) {
       setLoadError(err instanceof Error ? err.message : "Unable to load tickets.");
@@ -56,8 +50,6 @@ export function useTickets() {
     setUpdateError(null);
     try {
       const updated = await ticketService.updateStatus(id, status);
-      // Le ticket précédent est conservé tel quel en cas d'erreur (voir catch) :
-      // on ne remplace la liste qu'après un succès confirmé par le backend.
       setTickets((prev) => prev.map((t) => (t.id === id ? updated : t)));
       return updated;
     } catch (err) {
