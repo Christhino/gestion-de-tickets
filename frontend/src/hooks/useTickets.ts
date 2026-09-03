@@ -13,7 +13,8 @@ export function useTickets() {
     refetch,
   } = useQuery({
     queryKey: ticketKeys.all,
-    queryFn: ticketService.list,
+    // queryFn: ticketService.list,
+    queryFn: () => ticketService.list(),
   });
 
   const loadError = loadErrorRaw instanceof Error ? loadErrorRaw.message : null;
@@ -63,7 +64,8 @@ export function useTickets() {
     createTicket,
     clearCreateError: () => createMutation.reset(),
 
-    updatingId: updateMutation.variables?.id ?? null,
+    // updatingId: updateMutation.variables?.id ?? null,
+    updatingId: updateMutation.isPending ? (updateMutation.variables?.id ?? null) : null,
     updateError: updateMutation.error instanceof Error ? updateMutation.error.message : null,
     updateStatus,
     clearUpdateError: () => updateMutation.reset(),
