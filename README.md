@@ -4,29 +4,29 @@
 ![Aperçu](./assets/screenshots/screen-shot.png)
 
 Application de gestion de tickets présentée sous forme de Kanban à 4 colonnes
-(**All tickets / Pending / Open / Closed**), avec un frontend React +
-TypeScript et une API REST Node.js + Express + TypeScript. Stockage en
-mémoire, sans base de données.
+(**Tous les tickets / En attente / Ouverts / Fermés**), avec un frontend
+React + TypeScript et une API REST Node.js + Express + TypeScript. Stockage
+en mémoire, sans base de données.
 
 Cycle de vie d'un ticket :
 
 ```
-créé → pending → (clic "Open") → open → (clic "Close ticket") → closed
-                                    ↑                                │
-                                    └──────── (Reopen + confirm) ────┘
+créé → pending → (clic "Ouvrir le ticket") → open → (clic "Fermer le ticket") → closed
+                                    ↑                                              │
+                                    └──────── (Réouvrir + confirmation) ───────────┘
 ```
 
 - `pending` : état initial à la création, `openedAt` est `null`, le timer
   n'a pas démarré.
-- `open` : `openedAt` est fixé au moment du clic sur "Open ticket" (depuis
-  pending) ou "Reopen" (depuis closed) — le timer démarre/redémarre à cet
-  instant précis.
+- `open` : `openedAt` est fixé au moment du clic sur "Ouvrir le ticket"
+  (depuis pending) ou "Réouvrir" (depuis closed) — le timer démarre/redémarre
+  à cet instant précis.
 - `closed` : `closedAt` est enregistré au moment de la fermeture.
 
 ## Stack
 
 **Frontend**
-- React 18 + TypeScript
+- React 19 + TypeScript
 - Vite (bundler/dev server)
 - TanStack Query (cache, requêtes, mutations)
 - Tailwind CSS (styling)
@@ -143,12 +143,12 @@ Erreur inattendue → 500 (`{ error: "Internal server error." }`).
 ## Fonctionnalités
 
 ### Obligatoires
-- Consultation des tickets (GET) et répartition automatique Pending/Open/Closed
+- Consultation des tickets (GET) et répartition automatique En attente / Ouverts / Fermés
 - Création de ticket avec validation (titre requis, non vide) frontend + backend
 - Un nouveau ticket démarre en `pending`, sans `openedAt`
 - États loading / error (avec retry) / empty, bien distincts
 - État "creating" avec bouton désactivé pendant la création
-- Kanban 4 colonnes : All tickets (+ bouton créer) / Pending / Open / Closed
+- Kanban 4 colonnes : Tous les tickets (+ bouton créer) / En attente / Ouverts / Fermés
 - Ouverture d'un ticket pending (démarre le traitement et le timer)
 - Fermeture d'un ticket ouvert
 - Réouverture d'un ticket fermé avec confirmation préalable
@@ -177,9 +177,9 @@ Utilisation :
 - Erreur TS7030 (not all code paths return) → ajout des return manquants
 - Migration Tailwind v3 → v4 (npx tailwindcss init -p obsolète, passage à @tailwindcss/postcss puis discussion du plugin Vite)
 - FormEvent déprécié → FormEvent<HTMLFormElement>
-- Warning React "setState synchrone dans un effect" dans useTickets.ts → queueMicrotask
 - Règle ESLint react-refresh/only-export-components → extraction de StatusPill et formatDateTime dans des fichiers séparés
 - Mise à jour des imports cassés dans TicketDetails.tsx suite à cette extraction
+- Migration de `useTickets` vers TanStack Query (cache, mutations optimistes)
 - Aide à la rédaction de cette documentation.
 
 ## Gestion des données côté frontend — TanStack Query
