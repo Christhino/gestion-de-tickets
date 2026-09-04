@@ -68,7 +68,7 @@ export function TicketBoard() {
           <div>
             <h1 className="text-base font-semibold text-slate-900">Gestion des tickets</h1>
             <p className="text-xs text-slate-400">
-              {loading ? "Loading…" : `${tickets.length} ticket${tickets.length === 1 ? "" : "s"} total`}
+              {loading ? "Chargement…" : `${tickets.length} ticket${tickets.length === 1 ? "" : "s"} au total`}
             </p>
           </div>
 
@@ -77,7 +77,7 @@ export function TicketBoard() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search tickets…"
+              placeholder="Rechercher un ticket…"
               className="w-full rounded-lg border border-slate-200 bg-slate-50 py-1.5 pl-8 pr-3 text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
@@ -90,12 +90,12 @@ export function TicketBoard() {
         {!loading && loadError && (
           <div className="flex flex-col items-center justify-center gap-3 py-16 text-center border border-red-100 rounded-xl bg-red-50">
             <AlertTriangle className="w-6 h-6 text-red-500" />
-            <p className="text-sm font-medium text-red-700">Unable to load tickets.</p>
+            <p className="text-sm font-medium text-red-700">Impossible de charger les tickets.</p>
             <button 
               onClick={() => reload()}
               className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700"
             >
-              Retry
+              Réessayer
             </button>
           </div>
         )}
@@ -104,18 +104,19 @@ export function TicketBoard() {
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
             {/* Tous les tickets, avec le bouton de création */}
             <TicketColumn
-              title="All tickets"
+              title="Tous les tickets"
+              testId="column-all-tickets"
               count={filtered.length}
               accentClassName="bg-indigo-100 text-indigo-600"
               icon={<TicketIcon className="h-3.5 w-3.5" />}
               emptyLabel={
                 tickets.length === 0 ? (
                   <div>
-                    <p>No tickets yet.</p>
-                    <p className="mt-1 text-slate-400">Create your first ticket.</p>
+                    <p>Aucun ticket pour le moment.</p>
+                    <p className="mt-1 text-slate-400">Créez votre premier ticket.</p>
                   </div>
                 ) : (
-                  <p>No tickets match your search.</p>
+                  <p>Aucun ticket ne correspond à la recherche.</p>
                 )
               }
               headerAction={
@@ -123,7 +124,7 @@ export function TicketBoard() {
                   onClick={() => setShowCreate(true)}
                   className="mb-1 flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-indigo-300 bg-indigo-50/60 px-3 py-2.5 text-sm font-medium text-indigo-600 hover:bg-indigo-50"
                 >
-                  <Plus className="w-4 h-4" /> Create ticket
+                  <Plus className="w-4 h-4" /> Créer un ticket
                 </button>
               }
             >
@@ -134,11 +135,12 @@ export function TicketBoard() {
 
             {/* Pending — tickets créés, pas encore pris en charge */}
             <TicketColumn
-              title="Pending"
+              title="En attente"
+              testId="column-pending"
               count={pending.length}
               accentClassName="bg-amber-100 text-amber-600"
               icon={<Hourglass className="h-3.5 w-3.5" />}
-              emptyLabel="No pending tickets."
+              emptyLabel="Aucun ticket en attente."
             >
               {pending.map((t) => (
                 <TicketCard key={t.id} ticket={t} onOpen={(ticket) => setSelectedId(ticket.id)} />
@@ -147,11 +149,12 @@ export function TicketBoard() {
 
             {/* Open */}
             <TicketColumn
-              title="Open"
+              title="Ouverts"
+              testId="column-open"
               count={open.length}
               accentClassName="bg-emerald-100 text-emerald-600"
               icon={<Clock className="h-3.5 w-3.5" />}
-              emptyLabel="No open tickets."
+              emptyLabel="Aucun ticket ouvert."
             >
               {open.map((t) => (
                 <TicketCard key={t.id} ticket={t} onOpen={(ticket) => setSelectedId(ticket.id)} />
@@ -160,11 +163,12 @@ export function TicketBoard() {
 
             {/* Closed */}
             <TicketColumn
-              title="Closed"
+              title="Fermés"
+              testId="column-closed"
               count={closed.length}
               accentClassName="bg-slate-200 text-slate-500"
               icon={<CheckCircle2 className="h-3.5 w-3.5" />}
-              emptyLabel="No closed tickets."
+              emptyLabel="Aucun ticket fermé."
             >
               {closed.map((t) => (
                 <TicketCard key={t.id} ticket={t} onOpen={(ticket) => setSelectedId(ticket.id)} />

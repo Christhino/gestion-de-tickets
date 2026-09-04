@@ -54,7 +54,7 @@ export function TicketDetails({
       >
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
           <span className="font-mono text-xs text-slate-400">{ticket.id}</span>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600" aria-label="Close">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600" aria-label="Fermer">
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -67,17 +67,17 @@ export function TicketDetails({
 
           <dl className="mt-6 space-y-4 text-sm">
             <div>
-              <dt className="text-xs font-medium uppercase tracking-wide text-slate-400">Created</dt>
+              <dt className="text-xs font-medium uppercase tracking-wide text-slate-400">Créé</dt>
               <dd className="mt-0.5 text-slate-700">{formatDateTime(ticket.createdAt)}</dd>
             </div>
             {isOpen && (
               <>
                 <div>
-                  <dt className="text-xs font-medium uppercase tracking-wide text-slate-400">Opened</dt>
+                  <dt className="text-xs font-medium uppercase tracking-wide text-slate-400">Ouvert</dt>
                   <dd className="mt-0.5 text-slate-700">{formatDateTime(ticket.openedAt)}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-medium uppercase tracking-wide text-slate-400">Time open</dt>
+                  <dt className="text-xs font-medium uppercase tracking-wide text-slate-400">Temps d'ouverture</dt>
                   <dd className="mt-0.5 text-slate-700 text-base">
                     <LiveTimer openedAt={ticket.openedAt} />
                   </dd>
@@ -86,12 +86,12 @@ export function TicketDetails({
             )}
             {isClosed && (
               <div>
-                <dt className="text-xs font-medium uppercase tracking-wide text-slate-400">Closed</dt>
+                <dt className="text-xs font-medium uppercase tracking-wide text-slate-400">Fermé</dt>
                 <dd className="mt-0.5 text-slate-700">{formatDateTime(ticket.closedAt)}</dd>
               </div>
             )}
             {isPending && (
-              <p className="text-sm text-slate-400">This ticket hasn't been started yet.</p>
+              <p className="text-sm text-slate-400">Ce ticket n'a pas encore été démarré.</p>
             )}
           </dl>
 
@@ -110,7 +110,7 @@ export function TicketDetails({
               className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-60 flex items-center justify-center gap-2"
             >
               <PlayCircle className="h-4 w-4" />
-              {updating ? "Opening…" : "Open ticket"}
+              {updating ? "Ouverture…" : "Ouvrir le ticket"}
             </button>
           )}
           {isOpen && (
@@ -120,7 +120,7 @@ export function TicketDetails({
               className="w-full rounded-lg bg-slate-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-900 disabled:opacity-60 flex items-center justify-center gap-2"
             >
               <CheckCircle2 className="h-4 w-4" />
-              {updating ? "Closing…" : "Close ticket"}
+              {updating ? "Fermeture…" : "Fermer le ticket"}
             </button>
           )}
           {isClosed && (
@@ -130,7 +130,7 @@ export function TicketDetails({
               className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60 flex items-center justify-center gap-2"
             >
               <RotateCcw className="h-4 w-4" />
-              Reopen
+              Réouvrir
             </button>
           )}
         </div>

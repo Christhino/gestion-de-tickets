@@ -21,7 +21,7 @@ export function TicketCard({ ticket, onOpen }: TicketCardProps) {
       <p className="mt-1.5 text-sm font-medium text-slate-800 leading-snug">{ticket.title}</p>
       <div className="mt-2.5 flex items-center gap-1.5 text-[11px] text-slate-400">
         <Clock className="h-3 w-3" />
-        <span>Created {formatDateTime(ticket.createdAt)}</span>
+        <span>Créé le {formatDateTime(ticket.createdAt)}</span>
       </div>
     </button>
   );

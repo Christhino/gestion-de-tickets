@@ -11,7 +11,7 @@ describe("TicketCard", () => {
 
     expect(screen.getByText(pendingTicket.id)).toBeInTheDocument();
     expect(screen.getByText(pendingTicket.title)).toBeInTheDocument();
-    expect(screen.getByText(pendingTicket.status)).toBeInTheDocument();
+    expect(screen.getByText("En attente")).toBeInTheDocument();
   });
 
   it("calls onOpen with the ticket when clicked", async () => {

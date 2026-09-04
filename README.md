@@ -28,8 +28,10 @@ créé → pending → (clic "Open") → open → (clic "Close ticket") → clos
 **Frontend**
 - React 18 + TypeScript
 - Vite (bundler/dev server)
+- TanStack Query (cache, requêtes, mutations)
 - Tailwind CSS (styling)
 - lucide-react (icônes)
+- Vitest + React Testing Library (tests)
 
 **Backend**
 - Node.js + Express + TypeScript
@@ -55,11 +57,11 @@ npm run dev
 Le frontend proxifie `/api/*` vers `http://localhost:4000` (voir
 `frontend/vite.config.ts`), il n'y a donc rien à configurer côté CORS en dev.
 
-Pour lancer les tests backend :
+Pour lancer les tests :
 
 ```bash
-cd backend
-npm test
+cd backend && npm test
+cd frontend && npm test
 ```
 
 ## Architecture
@@ -90,7 +92,8 @@ try/catch dupliqués dans chaque route.
 frontend/src/
   types/ticket.ts         → miroir des types backend
   services/ticketService.ts → seul point d'accès à l'API (fetch centralisé)
-  hooks/useTickets.ts     → tout l'état asynchrone (loading/error/creating/updating)
+  hooks/useTickets.ts     → TanStack Query : cache, requêtes, mutations optimistes
+  hooks/queryKeys.ts      → factory de clés de cache (`all`, `detail(id)`)
   components/
     TicketCard/           → carte d'un ticket
     TicketColumn/         → colonne générique (titre, compteur, empty state)
@@ -158,8 +161,7 @@ Erreur inattendue → 500 (`{ error: "Internal server error." }`).
 - Pagination et tri côté serveur
 - Historique des changements de statut (audit trail)
 - Notifications temps réel (WebSocket) lors des changements
-- Tests frontend (React Testing Library) et tests end-to-end
-- Optimistic UI sur la création/mise à jour de statut
+- Tests end-to-end
 
 ## Utilisation de l'IA
 
@@ -192,10 +194,11 @@ Le hook `useTickets` s'appuie sur **TanStack Query** plutôt que sur un
 - **États dérivés automatiquement** : `isLoading`, `isPending`, `error` sont
   fournis nativement par la librairie, éliminant le besoin de `useState`
   manuels pour chaque flag (`loading`, `creating`, `updatingId`, etc.).
-- **Mutations avec mise à jour optimiste du cache** : `useMutation` gère le
-  cycle de vie complet d'une écriture (création, changement de statut) et
-  permet de mettre à jour le cache directement via `setQueryData`, sans
-  refetch complet de la liste après chaque action.
+- **Mutations optimistes** : `onMutate` met à jour le cache *avant* la
+  réponse HTTP (ticket temporaire à la création, nouveau statut tout de
+  suite). Le snapshot `previousTickets` est restauré dans `onError` en cas
+  d'échec. `onSuccess` remplace ensuite le placeholder par la ressource
+  serveur, sans refetch de toute la liste.
 - **Moins de code, moins de bugs potentiels** : la logique de
   loading/error/retry qui était écrite à la main (et dupliquée entre
   `createTicket` et `updateStatus`) est désormais gérée par une librairie

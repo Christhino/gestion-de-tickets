@@ -32,7 +32,7 @@ describe("TicketBoard (integration)", () => {
     const allColumn = await screen.findByTestId("column-all-tickets");
     await waitFor(() => expect(within(allColumn).getByText(pendingTicket.title)).toBeInTheDocument());
 
-    await userEvent.type(screen.getByPlaceholderText(/search tickets/i), "login");
+    await userEvent.type(screen.getByPlaceholderText(/rechercher un ticket/i), "login");
 
     expect(within(allColumn).getByText(pendingTicket.title)).toBeInTheDocument();
     expect(within(allColumn).queryByText(openTicket.title)).not.toBeInTheDocument();
@@ -53,8 +53,8 @@ describe("TicketBoard (integration)", () => {
     const allColumn = await screen.findByTestId("column-all-tickets");
     await waitFor(() => expect(within(allColumn).getByText(pendingTicket.title)).toBeInTheDocument());
 
-    await userEvent.click(screen.getByRole("button", { name: /create ticket/i }));
-    await userEvent.type(screen.getByLabelText(/title/i), "New integration ticket");
+    await userEvent.click(screen.getByRole("button", { name: /créer un ticket/i }));
+    await userEvent.type(screen.getByLabelText(/titre/i), "New integration ticket");
     await userEvent.click(screen.getByTestId("submit-create-ticket"));
 
     await waitFor(() =>
@@ -77,7 +77,7 @@ describe("TicketBoard (integration)", () => {
     );
 
     await userEvent.click(ticketInPendingColumn);
-    await userEvent.click(screen.getByRole("button", { name: /open ticket/i }));
+    await userEvent.click(screen.getByRole("button", { name: /ouvrir le ticket/i }));
 
     await waitFor(() =>
       expect(mockTicketService.updateStatus).toHaveBeenCalledWith(pendingTicket.id, "open")

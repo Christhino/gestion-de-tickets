@@ -8,6 +8,7 @@ interface TicketColumnProps {
   emptyLabel: ReactNode;
   children?: ReactNode;
   headerAction?: ReactNode;
+  testId?: string;
 }
 
 export function TicketColumn({
@@ -18,12 +19,13 @@ export function TicketColumn({
   emptyLabel,
   children,
   headerAction,
+  testId,
 }: TicketColumnProps) {
   const hasCards = Boolean(children) && count > 0;
-  const testId = `column-${title.toLowerCase().replace(/\s+/g, "-")}`;
+  const columnTestId = testId ?? `column-${title.toLowerCase().replace(/\s+/g, "-")}`;
 
   return (
-    <div data-testid={testId} className="flex flex-col flex-1 min-w-0">
+    <div data-testid={columnTestId} className="flex flex-col flex-1 min-w-0">
       <div className="flex items-center gap-2 mb-3">
         <span className={"flex h-6 w-6 items-center justify-center rounded-md " + accentClassName}>{icon}</span>
         <h2 className="text-sm font-semibold text-slate-700">{title}</h2>
